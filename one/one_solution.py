@@ -32,3 +32,40 @@ all of the pairs you found. In the example above, this is 2 + 1 + 0 + 1 + 2 + 5,
 
 Your actual left and right lists contain many location IDs. What is the total distance between your lists?
 """
+
+# read the file into one list -> each line is one entry in the list
+filename = "input_one"
+
+with open(filename) as f:
+    full_data = f.readlines()
+
+left_list = list()
+right_list = list()
+final_data = list()
+
+# separate this into two lists (each number has five digits)
+for line in full_data:
+    _left_element = line[:5]
+    _right_element = line[8:].strip()
+    left_list.append(_left_element)
+    right_list.append(_right_element)
+
+# sort lists and initialize the total distance
+left_list.sort()
+right_list.sort()
+
+total_distance = 0
+
+# calculate the individual distances and add them all up to the total distance. Also check if the list are of same size.
+if len(left_list) == len(right_list):
+    i = 0
+    for e in left_list:
+        _curr_left = int(e)
+        _curr_right = int(right_list[i])
+        local_distance = abs(_curr_left - _curr_right)
+        print(f"Current row:", _curr_left, ", ", _curr_right, ". Dist: ", local_distance, "\n")
+        total_distance += local_distance
+        i += 1
+    print(f"Total distance is: ", total_distance)
+else:
+    print("Lists are of different sizes!")
