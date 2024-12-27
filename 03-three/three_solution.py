@@ -99,11 +99,9 @@ def problem_dampener_processing(input_data) -> bool:
     pos = 0
     dampened = False
     while pos < len(input_data):
-        _temp_row = input_data[:]
-        print(f"Starting row: {_temp_row}")
+        _temp_row = input_data[
+                    :]  # this assignment is important in Python, as standard equality only references the address
         _temp_row.pop(pos)
-        print(f"Popped row: {_temp_row}")
-        print(f"Position: {pos}")
         pos += 1
         if condition_one(_temp_row) and condition_two(_temp_row):
             dampened = True
