@@ -9,14 +9,15 @@ Any two adjacent levels differ by at least one and at most three.
 
 # get the report from file
 filename = "input_three"
+no_newlines = []
+problem_dampener_input = []
 
 with open(filename) as f:
     read_file = f.readlines()
 
-no_newlines = []
-
 for i in read_file:
     no_newlines.append(i.strip())
+
 
 # parse and format the data appropriately
 def data_preparation(input_data):
@@ -50,7 +51,6 @@ def condition_one(input_data) -> bool:
             increasing = False
             break
 
-
     # check whether the array is decreasing, only if it's not increasing
     if not increasing:
         pos = 0
@@ -61,7 +61,6 @@ def condition_one(input_data) -> bool:
             else:
                 decreasing = False
                 break
-
 
     if increasing or decreasing:
         return True
@@ -90,6 +89,30 @@ def condition_two(input_data) -> bool:
     return diff_cond
 
 
+def problem_dampener_processing(input_data) -> bool:
+    """
+    Applies the Problem Dampener rules to the data that doesn't pass scrutiny.
+    :param input_data: data that has been marked as `doesn't fit original conditions`
+    :return: boolean, True if the results can be damped
+    """
+
+    pos = 0
+    dampened = False
+    while pos < len(input_data):
+        _temp_row = input_data[:]
+        print(f"Starting row: {_temp_row}")
+        _temp_row.pop(pos)
+        print(f"Popped row: {_temp_row}")
+        print(f"Position: {pos}")
+        pos += 1
+        if condition_one(_temp_row) and condition_two(_temp_row):
+            dampened = True
+            break
+        else:
+            dampened = False
+
+    return dampened
+
 
 # method to calculate the safety
 def calculate_report_safety_counts(input_data) -> int:
@@ -99,11 +122,27 @@ def calculate_report_safety_counts(input_data) -> int:
         cond_two = condition_two(row)
         if cond_one and cond_two:
             safe_reports += 1
+        else:
+            problem_dampener_input.append(row)
     return safe_reports
+
+
+# method to calculate the dampened data
+def calculate_dampened_safety_counts(input_data) -> int:
+    dampened_reports = 0
+    for row in input_data:
+        if problem_dampener_processing(row):
+            dampened_reports += 1
+    return dampened_reports
 
 
 # final working
 final_data = data_preparation(no_newlines)
 
 total_safe = calculate_report_safety_counts(final_data)
-print(f"Total number of safe reports: {total_safe}")
+print(f"Total number of safe reports: {total_safe}\n")
+
+total_dampened = calculate_dampened_safety_counts(problem_dampener_input)
+print(f"Total number of dampened reports: {total_dampened}\n")
+
+print(f"Grand total of safe reports: {total_safe + total_dampened}")
