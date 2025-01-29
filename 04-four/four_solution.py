@@ -43,3 +43,25 @@ def calculate_final_result(muls_list) -> int:
 
 
 print(f"The final result is {calculate_final_result(correct_muls)}")
+
+"""
+PART TWO
+"""
+
+reg_x_do = r"do\(\)"
+reg_x_dont = r"don\'t\(\)"
+
+only_with_dos = []
+
+# split into subfiles each time a do is encountered
+
+def calculate_final_result_with_dos() -> int:
+    dos_list = re.split(reg_x_do, input_data)
+    only_after_dos = ""
+    for i in dos_list:
+        temp_split = re.split(reg_x_dont, i)
+        only_after_dos += temp_split[0]
+
+    return calculate_final_result(re.findall(reg_x, only_after_dos))
+
+print(f"The final result, including only those with dos is: {calculate_final_result_with_dos()}")
